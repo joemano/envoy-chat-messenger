@@ -6,7 +6,7 @@ import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 import EnvelopeIcon from '../assets/envelope.png';
 import LogoutIcon from '../assets/logout.png';
 
-const SideBar = () => {
+const SideBar = () => (
   <div className="channel-list__sidebar">
     <div className="channel-list__sidebar__icon1">
       <div className="icon1__inner">
@@ -19,14 +19,14 @@ const SideBar = () => {
       </div>
     </div>
   </div>
-}
+);
 
 const ChannelListContainer = () => {
   return (
-    <div>
-      ChannelListContainer
-    </div>
-  )
+    <>
+      <SideBar />
+    </>
+  );
 }
 
 export default ChannelListContainer
