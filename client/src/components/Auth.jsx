@@ -4,10 +4,28 @@ import axios from 'axios';
 
 import signinImage from '../assets/signup.jpg';
 
+const initialState = {
+  fullName: '',
+  username: '',
+  password: '',
+  confirmPassword: '',
+  phoneNumber: '',
+  avatarURL: ''
+}
+
 const Auth = () => {
+  const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(true);
 
-  const handleChange = () => { };
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log(form);
+  }
 
   const switchMode = () => {
     // returns the opposite state of isSignup and sets it to current state
@@ -22,7 +40,7 @@ const Auth = () => {
           {/* 
             Elements without the isSignup check are present regardless of state
           */}
-          <form onSubmit={() => { }}>
+          <form onSubmit={handleSubmit}>
             {isSignup && (
               <div className="auth__form-container_fields-content_input">
                 <label htmlFor="fullName">Full Name</label>
@@ -82,7 +100,7 @@ const Auth = () => {
             {isSignup && (
               <div className="auth__form-container_fields-content_input">
                 <label htmlFor="confirmPassword">Confirm Password</label>
-                <passwordt
+                <input
                   name="confirmPassword"
                   type="password"
                   placeholder="Confirm Password"
@@ -91,6 +109,9 @@ const Auth = () => {
                 />
               </div>
             )}
+            <div className="auth__form-container_fields-content_button">
+              <button>{isSignup ? 'Sign up' : 'Sign in'}</button>
+            </div>
           </form>
           <div className="auth__form-container_fields-account">
             <p>
