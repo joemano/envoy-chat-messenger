@@ -33,6 +33,7 @@ const App = () => {
 
   if (!authToken) return <Auth />
 
+  // set up context API later.
   return (
     <div className="app__wrapper">
       <Chat client={client} theme="team light">

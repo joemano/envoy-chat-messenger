@@ -2,8 +2,8 @@ import React from 'react'
 
 import { AddChannel } from '../assets'
 
-const TeamChannelList = ({ children, error = false, loading, type }) => {
-  if(error) {
+const TeamChannelList = ({ children, error = false, loading, type, isCreating, setIsCreating, setCreateType, setIsEditing }) => {
+  if (error) {
     return type === 'team' ? (
       <div className="team-channel-list">
         <p className="team-channel-list__message">
@@ -13,11 +13,11 @@ const TeamChannelList = ({ children, error = false, loading, type }) => {
     ) : null
   }
 
-  if(loading) {
+  if (loading) {
     return (
       <div className="team-channel-list">
         <p className="team-channel-list__message loading">
-          { type === 'team' ? 'Channels' : 'Messages' } loading...
+          {type === 'team' ? 'Channels' : 'Messages'} loading...
         </p>
       </div>
     )
@@ -27,11 +27,17 @@ const TeamChannelList = ({ children, error = false, loading, type }) => {
     <div className="team-channel-list">
       <div className="team-channel-list__header">
         <p className="team-channel-list__header__title">
-          { type === 'team' ? 'Channels' : 'Direct Messages' }
+          {type === 'team' ? 'Channels' : 'Direct Messages'}
         </p>
-        {/* button add channel*/}
+        <AddChannel
+          isCreating={isCreating}
+          setIsCreating={setIsCreating}
+          setCreateType={setCreateType}
+          setIsEditing={setIsEditing}
+          type={type === 'team' ? 'team' : 'messaging'}
+        />
       </div>
-      { children }
+      {children}
     </div>
   )
 }
