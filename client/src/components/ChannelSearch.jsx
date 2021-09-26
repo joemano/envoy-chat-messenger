@@ -1,15 +1,43 @@
 import React, { useState, useEffect } from 'react'
 import { useChatContext } from 'stream-chat-react';
 
+import { ResultsDropdown } from './';
 import { SearchIcon } from '../assets';
 
-const ChannelSearch = () => {
+const ChannelSearch = ({ setToggleContainer }) => {
+  const { client, setActiveChannel } = useChatContext();
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [teamChannels, setTeamChannels] = useState([]);
+  const [directChannels, setDirectChannels] = useState([]);
+
+  // clear team and direct channels if there is no query
+  useEffect(()=>{
+    if(!query) {
+      setTeamChannels([]);
+      setDirectChannels([]);
+    }
+  }, [query]);
 
   const getChannels = async (text) => {
     try {
-      // TODO: Fetch channels
+      const channelResponse = client.queryChannels({
+        type: 'team',
+        name: { $autocomplete: text },
+        members: { $in: [client.userID] }
+      });
+      const userResponse = client.queryUsers({
+        id: { $ne: client.userID },
+        name: { $autocomplete: text }
+      });
+
+      // If await is put in front of the previous queries you will have to wait 
+      // for a query to resolve before starting the next.
+      // By passing an array of queries to a Promise.all, we can make multiple queries at the same time.
+      const [channels, { users }] = await Promise.all([channelResponse, userResponse]);
+
+      if (channels.length) setTeamChannels(channels);
+      if (users.length) setDirectChannels(users);
     } catch (error) {
       setQuery('');
     }
@@ -23,14 +51,35 @@ const ChannelSearch = () => {
     getChannels(event.target.value);
   }
 
+  const setChannel = (channel) => {
+    setQuery('');
+    setActiveChannel(channel);
+  }
+
   return (
     <div className="channel-search__container">
       <div className="channel-search__input__wrapper">
         <div className="channel-search__input__icon">
           <SearchIcon />
         </div>
-        <input className="channel-search__input__text" placeholder="Search" type="text" value={query} onChange={onSearch} />
+        <input
+          className="channel-search__input__text"
+          placeholder="Search"
+          type="text"
+          value={query}
+          onChange={onSearch}
+        />
       </div>
+      {query && (
+        <ResultsDropdown 
+          teamChannels={teamChannels}
+          directChannels={directChannels}
+          loading={loading}
+          setChannel={setChannel}
+          setQuery={setQuery}
+          setToggleContainer={setToggleContainer}
+        />
+      )}
     </div>
   )
 }
