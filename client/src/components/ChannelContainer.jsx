@@ -18,7 +18,9 @@ const ChannelContainer = ({ isCreating, setIsCreating, isEditing, setIsEditing, 
 
   if(isEditing) {
     return (
-      <EditChannel setIsEditing={setIsEditing} />
+      <div className="channel__container">
+        <EditChannel setIsEditing={setIsEditing} />
+      </div>
     );
   }
 
